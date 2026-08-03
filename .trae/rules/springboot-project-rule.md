@@ -405,7 +405,17 @@ private String url="xxx";
 
 ---
 
-# 16. AI代码生成规范
+# 16.接口文档生成规范
+
+使用springdoc作为接口文档生成相关的框架/工具链
+
+1.所有接口都需要配置springdoc注解，实现在网页上进行调试
+
+2.接口的入参也要加上注解，描述入参含义
+
+---
+
+# 17. AI代码生成规范
 
 生成代码必须：
 
@@ -430,7 +440,7 @@ private String url="xxx";
 
 ---
 
-# 17. 禁止事项
+# 18. 禁止事项
 
 禁止：
 
@@ -445,7 +455,7 @@ private String url="xxx";
 
 ---
 
-# 18. Commit规范
+# 19. Commit规范
 
 格式：
 
@@ -460,3 +470,4 @@ test     测试
 示例：
 
 feat: add user register api
+
