@@ -4,34 +4,40 @@ server:
   servlet:
     context-path: /api
 
+spring:
+  # 数据源
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf8
     username: root
     password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
-  # redis配置
-  redis:
-    # Redis数据库索引（默认为0）
-    database: 1
-    # Redis服务器地址
-    host: 127.0.0.1
-    # Redis服务器连接端口
-    port: 6379
-    # Redis服务器连接密码（默认为空）
-    password: 123456
-    # 连接超时时间
-    timeout: 10s
-    lettuce:
-      pool:
-        # 连接池最大连接数
-        max-active: 200
-        # 连接池最大阻塞等待时间（使用负值表示没有限制）
-        max-wait: -1ms
-        # 连接池中的最大空闲连接
-        max-idle: 10
-        # 连接池中的最小空闲连接
-        min-idle: 0
+
+  # redis配置 (SpringBoot3+ 使用 spring.data.redis)
+  data:
+    redis:
+      # Redis数据库索引（默认为0）
+      database: 1
+      # Redis服务器地址
+      host: 127.0.0.1
+      # Redis服务器连接端口
+      port: 6379
+      # Redis服务器连接密码（默认为空）
+      password: 123456
+      # 连接超时时间
+      timeout: 10s
+      lettuce:
+        pool:
+          # 连接池最大连接数
+          max-active: 200
+          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: -1ms
+          # 连接池中的最大空闲连接
+          max-idle: 10
+          # 连接池中的最小空闲连接
+          min-idle: 0
+
+  # 建表脚本位于 resources/sql/init.sql，由开发者手动执行，应用启动时不再自动运行
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:
@@ -49,6 +55,8 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
+  # 关闭 cookie 读取，前后端分离架构下 token 统一通过 header 传递
+  is-read-cookie: false
 
 mybatis-plus:
   configuration:
@@ -56,6 +64,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:/mapper/**.xml
   type-aliases-package: com.cc.blogserver.domain
+  # 逻辑删除不走 MyBatis-Plus @TableLogic，由代码手动维护 is_delete 字段(删除=更新为1，查询=带 is_delete=0)
 
 springdoc:
   swagger-ui:
