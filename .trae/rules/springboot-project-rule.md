@@ -128,6 +128,8 @@ project-root/
 - 编写业务逻辑
 - 操作数据库
 - 处理复杂转换
+- 在类上 @RequestMapping 用使用多层路径
+- 方法上不明确路径，依靠靠 HTTP 方法区分接口
 
 ## Service层
 
@@ -470,4 +472,3 @@ test     测试
 示例：
 
 feat: add user register api
-

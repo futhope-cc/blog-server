@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Sa-Token 拦截器配置
- * 拦截 /admin/**，放行登录接口与接口文档
+ * 拦截 /user/**，放行登录接口与接口文档
  * 注意：context-path=/api，拦截路径不含 /api 前缀
  */
 @Configuration
@@ -17,9 +17,9 @@ public class SaTokenConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SaInterceptor(handle -> StpUtil.checkLogin()))
-                .addPathPatterns("/admin/**")
+                .addPathPatterns("/user/**")
                 .excludePathPatterns(
-                        "/admin/login",
+                        "/user/login",
                         "/doc.html",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
