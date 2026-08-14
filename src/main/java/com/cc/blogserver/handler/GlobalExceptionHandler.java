@@ -13,6 +13,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.Objects;
@@ -85,6 +86,12 @@ public class GlobalExceptionHandler {
     public Result<Void> handleNoHandler(NoHandlerFoundException e, HttpServletRequest request) {
         log.warn("接口不存在, uri={}", request.getRequestURI());
         return Result.fail(ErrorCode.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public Result<Void> handleMaxUploadSize(MaxUploadSizeExceededException e) {
+        log.warn("文件上传超过大小限制, message={}", e.getMessage());
+        return Result.fail(ErrorCode.PARAM_INVALID.getCode(), "上传文件大小超过限制");
     }
 
     @ExceptionHandler(Exception.class)

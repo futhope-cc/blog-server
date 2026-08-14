@@ -12,6 +12,12 @@ spring:
     username: root
     password: 123456
 
+  # 文件上传大小限制(Servlet 容器层，业务层按图片/附件类型二次校验)
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
 
   # redis配置 (SpringBoot3+ 使用 spring.data.redis)
   data:
@@ -70,3 +76,12 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
+
+############## 本地文件存储配置 ##############
+file:
+  # 上传根目录(相对项目根目录)
+  upload-dir: ./upload
+  # 图片最大大小(字节) 5MB
+  max-image-size: 5242880
+  # 附件最大大小(字节) 20MB
+  max-file-size: 20971520

@@ -25,6 +25,20 @@ public enum ErrorCode {
     CANNOT_DELETE_SELF(1006, "不能删除自己"),
     CANNOT_DELETE_LAST_ADMIN(1007, "不能删除最后一个管理员"),
 
+    CATEGORY_NAME_EXISTS(1008, "分类名称已存在"),
+    CATEGORY_NOT_EXIST(1009, "分类不存在"),
+    CATEGORY_HAS_ARTICLES(1010, "该分类下存在文章，无法删除"),
+    TAG_NAME_EXISTS(1011, "标签名称已存在"),
+    TAG_NOT_EXIST(1012, "标签不存在"),
+    ARTICLE_NOT_EXIST(1013, "文章不存在"),
+    ARTICLE_TITLE_EXISTS(1014, "文章标题已存在"),
+    PROJECT_NOT_EXIST(1015, "项目不存在"),
+    PROJECT_NAME_EXISTS(1016, "项目名称已存在"),
+    FILE_UPLOAD_FAILED(1017, "文件上传失败"),
+    FILE_TYPE_NOT_ALLOWED(1018, "不支持的文件类型"),
+    FILE_NOT_EXIST(1019, "文件不存在"),
+    PROFILE_NOT_EXIST(1020, "个人简介不存在"),
+
     SYSTEM_ERROR(500, "系统错误");
 
     private final int code;

@@ -10,7 +10,10 @@ import lombok.Getter;
 public enum RedisKey {
 
     USER_INFO("user:info:%s"),
-    USER_LOGIN_CAPTCHA("user:captcha:%s");
+    USER_LOGIN_CAPTCHA("user:captcha:%s"),
+
+    /** 文章浏览量(前台详情访问计数，定时/回写数据库) */
+    ARTICLE_VIEW_COUNT("article:view:%s");
 
     private final String pattern;
 
