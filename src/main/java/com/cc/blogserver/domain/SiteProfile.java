@@ -32,4 +32,10 @@ public class SiteProfile extends BaseDomain {
 
     /** Github主页 */
     private String github;
+
+    /** 技术方向(JSON数组: title/icon/desc) */
+    private String directions;
+
+    /** 工作经历(JSON数组: company/position/period/desc) */
+    private String workExperience;
 }

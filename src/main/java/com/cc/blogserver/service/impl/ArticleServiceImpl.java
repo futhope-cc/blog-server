@@ -327,11 +327,23 @@ public class ArticleServiceImpl implements ArticleService {
         if (CollectionUtils.isEmpty(tagIds)) {
             return;
         }
-        for (Long tagId : tagIds) {
-            ArticleTag articleTag = new ArticleTag();
-            articleTag.setArticleId(articleId);
-            articleTag.setTagId(tagId);
-            articleTagMapper.insert(articleTag);
+        // 去重，避免请求内重复标签触发唯一键冲突
+        List<Long> distinctTagIds = tagIds.stream().distinct().toList();
+        for (Long tagId : distinctTagIds) {
+            ArticleTag existing = articleTagMapper.selectOne(new LambdaQueryWrapper<ArticleTag>()
+                    .eq(ArticleTag::getArticleId, articleId)
+                    .eq(ArticleTag::getTagId, tagId));
+            if (Objects.isNull(existing)) {
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setArticleId(articleId);
+                articleTag.setTagId(tagId);
+                articleTagMapper.insert(articleTag);
+            } else if (Objects.equals(existing.getIsDelete(), DELETED)) {
+                // 复用已逻辑删除的关系记录，避免 (article_id, tag_id) 唯一键冲突
+                articleTagMapper.update(null, new LambdaUpdateWrapper<ArticleTag>()
+                        .eq(ArticleTag::getId, existing.getId())
+                        .set(ArticleTag::getIsDelete, NOT_DELETED));
+            }
         }
     }
 

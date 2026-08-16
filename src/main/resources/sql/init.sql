@@ -153,6 +153,8 @@ CREATE TABLE IF NOT EXISTS `site_profile` (
   `social_links` VARCHAR(500) NULL                      COMMENT '社交链接(JSON)',
   `email`       VARCHAR(100) NULL                       COMMENT '邮箱',
   `github`      VARCHAR(255) NULL                       COMMENT 'Github主页',
+  `directions`  VARCHAR(1000) NULL                      COMMENT '技术方向(JSON数组)',
+  `work_experience` VARCHAR(2000) NULL                  COMMENT '工作经历(JSON数组)',
   `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `create_by`   BIGINT       NULL                       COMMENT '创建者ID',
@@ -164,3 +166,9 @@ CREATE TABLE IF NOT EXISTS `site_profile` (
 
 -- 默认个人简介(占位，可在后台或直接改库更新)
 INSERT INTO `site_profile` (`nickname`, `bio`) VALUES ('站长', '个人简介待完善');
+
+-- ============================================================
+-- 存量库升级：新增 directions / work_experience 两列（全新库无需执行，已含在 CREATE TABLE 中）
+-- ============================================================
+ALTER TABLE `site_profile` ADD COLUMN `directions` VARCHAR(1000) NULL COMMENT '技术方向(JSON数组)' AFTER `github`;
+ALTER TABLE `site_profile` ADD COLUMN `work_experience` VARCHAR(2000) NULL COMMENT '工作经历(JSON数组)' AFTER `directions`;

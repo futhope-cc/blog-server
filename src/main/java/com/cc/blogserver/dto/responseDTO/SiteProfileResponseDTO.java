@@ -33,6 +33,12 @@ public class SiteProfileResponseDTO {
     @Schema(description = "Github主页")
     private String github;
 
+    @Schema(description = "技术方向(JSON数组)")
+    private String directions;
+
+    @Schema(description = "工作经历(JSON数组)")
+    private String workExperience;
+
     @Schema(description = "更新时间")
     private LocalDateTime updateTime;
 }

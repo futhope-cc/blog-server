@@ -30,4 +30,12 @@ public class SiteProfileRequestDTO {
 
     @Schema(description = "Github主页")
     private String github;
+
+    @Size(max = 1000, message = "技术方向长度不能超过1000")
+    @Schema(description = "技术方向(JSON数组:[{title,icon,desc}])")
+    private String directions;
+
+    @Size(max = 2000, message = "工作经历长度不能超过2000")
+    @Schema(description = "工作经历(JSON数组:[{company,position,period,desc}])")
+    private String workExperience;
 }
