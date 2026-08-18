@@ -38,4 +38,8 @@ public class SiteProfileRequestDTO {
     @Size(max = 2000, message = "工作经历长度不能超过2000")
     @Schema(description = "工作经历(JSON数组:[{company,position,period,desc}])")
     private String workExperience;
+
+    @Size(max = 100, message = "备案号长度不能超过100")
+    @Schema(description = "备案号")
+    private String copyright;
 }

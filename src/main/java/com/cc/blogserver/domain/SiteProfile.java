@@ -38,4 +38,7 @@ public class SiteProfile extends BaseDomain {
 
     /** 工作经历(JSON数组: company/position/period/desc) */
     private String workExperience;
+
+    /** 备案号 */
+    private String copyright;
 }

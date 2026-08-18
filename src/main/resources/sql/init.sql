@@ -155,6 +155,7 @@ CREATE TABLE IF NOT EXISTS `site_profile` (
   `github`      VARCHAR(255) NULL                       COMMENT 'Github主页',
   `directions`  VARCHAR(1000) NULL                      COMMENT '技术方向(JSON数组)',
   `work_experience` VARCHAR(2000) NULL                  COMMENT '工作经历(JSON数组)',
+  `copyright`   VARCHAR(100) NULL                       COMMENT '备案号',
   `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `create_by`   BIGINT       NULL                       COMMENT '创建者ID',
@@ -172,3 +173,4 @@ INSERT INTO `site_profile` (`nickname`, `bio`) VALUES ('站长', '个人简介�
 -- ============================================================
 ALTER TABLE `site_profile` ADD COLUMN `directions` VARCHAR(1000) NULL COMMENT '技术方向(JSON数组)' AFTER `github`;
 ALTER TABLE `site_profile` ADD COLUMN `work_experience` VARCHAR(2000) NULL COMMENT '工作经历(JSON数组)' AFTER `directions`;
+ALTER TABLE `site_profile` ADD COLUMN `copyright` VARCHAR(100) NULL COMMENT '备案号' AFTER `work_experience`;

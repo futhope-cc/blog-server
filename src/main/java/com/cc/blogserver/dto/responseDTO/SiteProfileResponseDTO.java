@@ -39,6 +39,9 @@ public class SiteProfileResponseDTO {
     @Schema(description = "工作经历(JSON数组)")
     private String workExperience;
 
+    @Schema(description = "备案号")
+    private String copyright;
+
     @Schema(description = "更新时间")
     private LocalDateTime updateTime;
 }
