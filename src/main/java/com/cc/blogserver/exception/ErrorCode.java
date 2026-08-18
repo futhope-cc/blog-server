@@ -37,6 +37,7 @@ public enum ErrorCode {
     FILE_UPLOAD_FAILED(1017, "文件上传失败"),
     FILE_TYPE_NOT_ALLOWED(1018, "不支持的文件类型"),
     FILE_NOT_EXIST(1019, "文件不存在"),
+    FILE_IN_USE(1021, "文件正在使用中，无法删除"),
     PROFILE_NOT_EXIST(1020, "个人简介不存在"),
 
     SYSTEM_ERROR(500, "系统错误");

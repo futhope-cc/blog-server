@@ -7,12 +7,20 @@ import com.cc.blogserver.common.PageResult;
 import com.cc.blogserver.config.FileStorageProperties;
 import com.cc.blogserver.constant.FileType;
 import com.cc.blogserver.converter.FileRecordConverter;
+import com.cc.blogserver.domain.Article;
 import com.cc.blogserver.domain.FileRecord;
+import com.cc.blogserver.domain.Project;
+import com.cc.blogserver.domain.SiteProfile;
+import com.cc.blogserver.domain.User;
 import com.cc.blogserver.dto.requestDTO.FilePageRequestDTO;
 import com.cc.blogserver.dto.responseDTO.FileResponseDTO;
 import com.cc.blogserver.exception.BusinessException;
 import com.cc.blogserver.exception.ErrorCode;
+import com.cc.blogserver.mapper.ArticleMapper;
 import com.cc.blogserver.mapper.FileRecordMapper;
+import com.cc.blogserver.mapper.ProjectMapper;
+import com.cc.blogserver.mapper.SiteProfileMapper;
+import com.cc.blogserver.mapper.UserMapper;
 import com.cc.blogserver.service.FileRecordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +64,10 @@ public class FileRecordServiceImpl implements FileRecordService {
     private final FileRecordMapper fileRecordMapper;
     private final FileRecordConverter fileRecordConverter;
     private final FileStorageProperties properties;
+    private final ArticleMapper articleMapper;
+    private final ProjectMapper projectMapper;
+    private final SiteProfileMapper siteProfileMapper;
+    private final UserMapper userMapper;
 
     @Override
     public PageResult<FileResponseDTO> pageFiles(FilePageRequestDTO request) {
@@ -112,17 +124,60 @@ public class FileRecordServiceImpl implements FileRecordService {
         if (Objects.isNull(record)) {
             throw new BusinessException(ErrorCode.FILE_NOT_EXIST);
         }
+        // 检查文件是否被其他业务引用
+        checkFileInUse(record.getUrl());
+        // 删除物理文件
+        deletePhysicalFile(record.getUrl());
+        // 逻辑删除数据库记录
         FileRecord update = new FileRecord();
         update.setId(id);
         update.setIsDelete(DELETED);
         fileRecordMapper.updateById(update);
-        log.info("删除文件记录成功, fileId={}, name={}, url={}", id, record.getName(), record.getUrl());
+        log.info("删除文件成功, fileId={}, name={}, url={}", id, record.getName(), record.getUrl());
     }
 
     private FileRecord getNotDeletedFileById(Long id) {
         return fileRecordMapper.selectOne(new LambdaQueryWrapper<FileRecord>()
                 .eq(FileRecord::getId, id)
                 .eq(FileRecord::getIsDelete, NOT_DELETED));
+    }
+
+    /**
+     * 检查文件是否被文章封面、项目截图、用户头像、个人简介头像引用
+     */
+    private void checkFileInUse(String url) {
+        if (articleMapper.exists(new LambdaQueryWrapper<Article>()
+                .eq(Article::getCover, url).eq(Article::getIsDelete, NOT_DELETED))) {
+            throw new BusinessException(ErrorCode.FILE_IN_USE);
+        }
+        if (projectMapper.exists(new LambdaQueryWrapper<Project>()
+                .eq(Project::getImage, url).eq(Project::getIsDelete, NOT_DELETED))) {
+            throw new BusinessException(ErrorCode.FILE_IN_USE);
+        }
+        if (siteProfileMapper.exists(new LambdaQueryWrapper<SiteProfile>()
+                .eq(SiteProfile::getAvatar, url).eq(SiteProfile::getIsDelete, NOT_DELETED))) {
+            throw new BusinessException(ErrorCode.FILE_IN_USE);
+        }
+        if (userMapper.exists(new LambdaQueryWrapper<User>()
+                .eq(User::getAvatar, url).eq(User::getIsDelete, NOT_DELETED))) {
+            throw new BusinessException(ErrorCode.FILE_IN_USE);
+        }
+    }
+
+    /**
+     * 根据文件访问URL删除磁盘物理文件，文件不存在时静默忽略
+     */
+    private void deletePhysicalFile(String url) {
+        if (!StringUtils.hasText(url) || !url.startsWith(URL_PREFIX)) {
+            return;
+        }
+        String relativePath = url.substring(URL_PREFIX.length());
+        Path filePath = Paths.get(properties.getUploadDir(), relativePath);
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            log.warn("物理文件删除失败, url={}, message={}", url, e.getMessage());
+        }
     }
 
     private String getExtension(String fileName) {
